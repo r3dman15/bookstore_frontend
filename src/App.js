@@ -1,26 +1,28 @@
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Landing from './views/Landing';
+import Login from './views/Login';
+import Register from "./views/Register";
+import Home from "./views/Home"
 import './App.css';
-import React, {useEffect, useState} from "react";
-import axios from "axios";
-
-const Appp = () => {
-  const [genre , setGrenre] = useState([])
-
-  useEffect( () => {
-    axios.get("http://localhost:8080/bookstore/genre")
-        .then(res => setGrenre( res.data))
-        .finally(r => console.log(r))
-  }, [])
-
-  return <div>{genre.map(g => g.name +" ")}</div>
+import { useState } from 'react';
 
 
-}
 
 function App() {
+  const [loggedIn, setLoggedIn] = useState(false)
+  const [email, setEmail] = useState("")
+
   return (
-    <div className="App">
-    <Appp/>
-    </div>
+      <div className="App">
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Landing email={email} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>} />
+            <Route path="/login" element={<Login setLoggedIn={setLoggedIn} setEmail={setEmail} />} />
+            <Route path="/register" element={<Register  />} />
+            <Route path="/home" element={<Home  />} />
+          </Routes>
+        </BrowserRouter>
+      </div>
   );
 }
 
