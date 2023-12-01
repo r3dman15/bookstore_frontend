@@ -12,8 +12,8 @@ const Home = () => {
             .then(res => {
                 console.log(res.data)
                 setBooks(res.data)
-            }, [])
-    })
+            })
+    },[])
 
      return <div>  { books.map(({title, price, genre, availability, image_url ,description, authors}) => <BookCard authors={authors} description={description} image_url={image_url} title={title} price={price} availability={availability} genre={genre.name}/>) } </div>
 }
