@@ -1,17 +1,26 @@
 import React, { useState } from "react";
 import {Link} from "react-router-dom";
+import axios from "axios";
 
 
 const Login = (props) => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-    const [notFound, setNotFound] = useState(false)
+    const [notFound, setNotFound] = useState(true)
+    const [init, setInit] = useState(true)
 
 
 
 
-    const onButtonClick = () => {
-            setNotFound(true)
+    const onButtonClick = (email) => {
+        axios.get(`http://localhost:8080/bookstore/customer/findByEmail?email=${email}`
+        )
+            .catch(er => console.log(er))
+            .then(res => {
+                setNotFound(res.data.length <= 0)
+            }) ;
+        setInit(false)
+
     }
 
     return <div className={"mainContainer"}>
@@ -29,20 +38,23 @@ const Login = (props) => {
         <br />
         <div className={"inputContainer"}>
             <input
+                type={"password"}
                 value={password}
                 placeholder="Enter your password here"
                 onChange={ev => setPassword(ev.target.value)}
                 className={"inputBox"} />
         </div>
         <br />
-        { notFound && <Link to={"/register"}> <label style = {{color: "Red"}}>User not found register here </label></Link>}
+        { notFound && !init  && <Link to={"/register"}> <label style = {{color: "Red"}}>User not found register here </label></Link>}
+        <Link to={!notFound ? "/home" : null}>
         <div className={"inputContainer"}>
             <input
                 className={"inputButton"}
                 type="button"
-                onClick={onButtonClick}
+                onClick={() => onButtonClick(email)}
                 value={"Log in"} />
         </div>
+        </Link>
     </div>
 }
 
